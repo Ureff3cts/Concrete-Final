@@ -1231,10 +1231,19 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
               });
+
+              if (!res.ok) {
+                const errorText = await res.text();
+                console.error("Server error:", errorText);
+                alert("Failed to send message. Please try again or call us directly.");
+                return;
+              }
+
               const json = await res.json();
-              alert(json.success ? "Sent!" : (json.error || "Failed to send"));
-            } catch {
-              alert("Network error. Try again.");
+              alert(json.success ? "Message sent successfully!" : (json.error || "Failed to send"));
+            } catch (err) {
+              console.error("Network error:", err);
+              alert("Network error. Please check your connection and try again.");
             }
           });
         </script>
