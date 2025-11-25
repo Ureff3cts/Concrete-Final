@@ -62,7 +62,7 @@ app.post("/contact", async (req, res) => {
     });
 
     await transporter.sendMail({
-      from: process.env.MAIL_FROM || "tjsasphaltandconcreterepair@outlook.com",
+      from: process.env.MAIL_FROM || "asphaltconcreterepair@email.com",
       replyTo: email,
       to: process.env.MAIL_TO,
       subject: `New contact from ${name || "Unknown"}`,
