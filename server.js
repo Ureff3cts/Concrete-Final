@@ -33,8 +33,18 @@ app.use("/contact", rateLimit({ windowMs: 60 * 1000, max: 20 }));
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
 app.post("/contact", async (req, res) => {
+  console.log("Contact request received:", req.body);
   const { name, email, phone, message } = req.body;
   if (!email || !message) return res.status(400).json({ error: "Email and message are required." });
+
+  console.log("Environment check:", {
+    SMTP_HOST: process.env.SMTP_HOST,
+    SMTP_PORT: process.env.SMTP_PORT,
+    SMTP_USER: process.env.SMTP_USER ? "SET" : "MISSING",
+    SMTP_PASS: process.env.SMTP_PASS ? "SET" : "MISSING",
+    MAIL_FROM: process.env.MAIL_FROM,
+    MAIL_TO: process.env.MAIL_TO
+  });
 
   try {
     const transporter = nodemailer.createTransport({
@@ -59,7 +69,7 @@ ${message}`
     res.json({ success: true });
   } catch (err) {
     console.error("Mail error:", err);
-    res.status(500).json({ error: "Failed to send message." });
+    res.status(500).json({ error: "Failed to send message.", details: err.message });
   }
 });
 
