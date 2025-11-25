@@ -1193,7 +1193,7 @@
         </div>
 
         <!-- Contact Form (structured to match contact-card CSS) -->
-        <form id="contactForm" class="contact-card__form" action="https://concrete-final-production.up.railway.app/contact" method="POST">
+        <form id="contactForm" class="contact-card__form">
           <div class="contact-card__field">
             <label for="name">Name</label>
             <input id="name" name="name" type="text" required autocomplete="name">
@@ -1219,31 +1219,35 @@
           </div>
         </form>
 
+        <!-- EmailJS SDK -->
+        <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
         <script>
+          // Initialize EmailJS
+          emailjs.init("3lbzuyQGacQ3w8Wqf");
+
           const form = document.getElementById("contactForm");
           form.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const data = Object.fromEntries(new FormData(form));
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Sending...";
 
             try {
-              const res = await fetch(form.action, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-              });
-
-              if (!res.ok) {
-                const errorText = await res.text();
-                console.error("Server error:", errorText);
-                alert("Failed to send message. Please try again or call us directly.");
-                return;
-              }
-
-              const json = await res.json();
-              alert(json.success ? "Message sent successfully!" : (json.error || "Failed to send"));
+              const response = await emailjs.sendForm(
+                "service_7a7bnhi",
+                "template_myhjs2h",
+                form
+              );
+              
+              alert("Message sent successfully! We'll get back to you soon.");
+              form.reset();
             } catch (err) {
-              console.error("Network error:", err);
-              alert("Network error. Please check your connection and try again.");
+              console.error("EmailJS error:", err);
+              alert("Failed to send message. Please try again or call us directly at (863) 513-3241.");
+            } finally {
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Send";
             }
           });
         </script>
