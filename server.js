@@ -50,19 +50,19 @@ app.post("/contact", async (req, res) => {
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT || 587),
-      secure: false,
+      secure: true, // Use SSL for port 465
       auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
       tls: {
         ciphers: 'SSLv3',
         rejectUnauthorized: false
       },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 10000
+      connectionTimeout: 15000,
+      greetingTimeout: 15000,
+      socketTimeout: 15000
     });
 
     await transporter.sendMail({
-      from: process.env.MAIL_FROM || "asphaltconcreterepair@email.com",
+      from: process.env.MAIL_FROM || "tjsasphaltandconcreterepair@outlook.com",
       replyTo: email,
       to: process.env.MAIL_TO,
       subject: `New contact from ${name || "Unknown"}`,
